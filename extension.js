@@ -2,10 +2,10 @@
     name: "Airri", // Category Name
     description: "Send air quality value to Airri",
     author: "microBlock",
-    category: "Sensors",
+    category: "Communication",
     version: "1.0.0",
     icon: "/static/icon.png", // Category icon
-    color: "#E74C3C", // Category color (recommend some blocks color)
+    color: "#2ecc71", // Category color (recommend some blocks color)
     blocks: [ // Blocks in Category
         {
             xml: `
