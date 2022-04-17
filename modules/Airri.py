@@ -1,9 +1,11 @@
 from time import sleep
 import network
 import usocket
-import json
+import ujson
+import ussl
 
 HOST = const("airri.microblock.app")
+PORT = const(80)
 
 _token = None
 _field = None
@@ -34,22 +36,27 @@ def setField(name, value):
 
 def push():
     global _field
-    payload = json.dumps(_field)
+    payload = ujson.dumps(_field)
 
     s = usocket.socket()
-    ai = usocket.getaddrinfo("airri.microblock.app", 80)
-    s.connect(ai[0][-1])
-    s.write(b"POST /data HTTP/1.1\r\n")
-    s.write(b"Host: {}\r\n".format(HOST))
-    s.write(b"Authorization: {}\r\n".format(_token))
-    s.write(b"Content-Type: application/json\r\n")
-    s.write(b"Content-Length: {}\r\n".format(payload))
-    s.write(b"Connection: close\r\n")
-    s.write(b"\r\n")
-    s.write(bytes(payload))
-    ros = s.read()
-    s.close()
+    ai = usocket.getaddrinfo(HOST, PORT)
+    try:
+        s.connect(ai[0][-1])
+        if PORT == 443:
+            s = ussl.wrap_socket(s, server_hostname=HOST)
+        s.write(b"POST /data HTTP/1.1\r\n")
+        s.write(b"Host: {}:{}\r\n".format(HOST, PORT))
+        s.write(b"Authorization: {}\r\n".format(_token))
+        s.write(b"Content-Type: application/json\r\n")
+        s.write(b"Content-Length: {}\r\n".format(payload))
+        s.write(b"Connection: close\r\n")
+        s.write(b"\r\n")
+        s.write(bytes(payload))
+        print("Res: {}".format(s.read()))
+        s.close()
+    except OSError:
+        s.close()
 
     _field = { }
-    return ros
+    return None
 
