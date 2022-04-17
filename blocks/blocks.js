@@ -1,25 +1,24 @@
 Blockly.defineBlocksWithJsonArray(
   [{
     "type": "airri_set_value",
-    "message0": "%1 to Set %2 °C",
+    "message0": "Set %1 to %2",
     "args0": [
       {
         "type": "field_dropdown",
         "name": "field_name",
         "options": [
-          [
-            "Temperature", "temp" ],
-          [ "Humidity", "humi" ],
-          [ "Pressure", "pressure" ],
-          [ "Illuminance", "light" ],
-          [ "UV", "uv" ],
-          [ "PM1.0", "pm010" ],
-          [ "PM2.5", "pm025" ],
-          [ "PM10", "pm100" ],
-          [ "Wind Speed", "wind_speed" ],
-          [ "Wind Direction", "wind_dir" ],
-          [ "Rain Volume", "rain" ],
-          [ "CO2", "co2"
+          [ "Temperature (°C)", "temp" ],
+          [ "Humidity (%RH)", "humi" ],
+          [ "Pressure (hPa)", "pressure" ],
+          [ "Illuminance (lx)", "light" ],
+          [ "UV Index", "uv" ],
+          [ "PM1.0 (ug/m3)", "pm010" ],
+          [ "PM2.5 (ug/m3)", "pm025" ],
+          [ "PM10 (ug/m3)", "pm100" ],
+          [ "Wind Speed (m/s)", "wind_speed" ],
+          [ "Wind Direction (°)", "wind_dir" ],
+          [ "Rain Volume (cm)", "rain" ],
+          [ "CO2 (ppm)", "co2"
           ]
         ]
       },
@@ -109,7 +108,7 @@ Blockly.defineBlocksWithJsonArray(
   },
   {
     "type": "airri_push",
-    "message0": "Airri push data",
+    "message0": "Push data",
     "previousStatement": null,
     "nextStatement": null,
     "colour": 230,
