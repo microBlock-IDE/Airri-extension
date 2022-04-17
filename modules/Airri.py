@@ -5,7 +5,7 @@ import ujson
 import ussl
 
 HOST = const("airri.microblock.app")
-PORT = const(80)
+PORT = const(443)
 
 _token = None
 _field = None
