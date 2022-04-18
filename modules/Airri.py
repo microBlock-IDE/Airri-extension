@@ -7,8 +7,8 @@ import ussl
 HOST = "airri.microblock.app"
 PORT = 443
 
-_token = None
-_field = None
+_token = ""
+_field = { }
 
 def begin(ssid, passw, token):
     global _token
