@@ -51,7 +51,7 @@ def push():
         s.write(b"Content-Length: {}\r\n".format(payload))
         s.write(b"Connection: close\r\n")
         s.write(b"\r\n")
-        s.write(bytes(payload))
+        s.write(str.encode(payload))
         print("Res: {}".format(s.read()))
         s.close()
     except OSError:
