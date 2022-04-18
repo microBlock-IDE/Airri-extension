@@ -48,7 +48,7 @@ def push():
         s.write(b"Host: {}:{}\r\n".format(HOST, PORT))
         s.write(b"Authorization: {}\r\n".format(_token))
         s.write(b"Content-Type: application/json\r\n")
-        s.write(b"Content-Length: {}\r\n".format(payload))
+        s.write(b"Content-Length: {}\r\n".format(len(payload)))
         s.write(b"Connection: close\r\n")
         s.write(b"\r\n")
         s.write(str.encode(payload))
