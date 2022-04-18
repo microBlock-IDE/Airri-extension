@@ -4,8 +4,8 @@ import usocket
 import ujson
 import ussl
 
-HOST = const("airri.microblock.app")
-PORT = const(443)
+HOST = "airri.microblock.app"
+PORT = 443
 
 _token = None
 _field = None
