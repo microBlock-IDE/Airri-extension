@@ -3,7 +3,7 @@
     description: "Send air quality value to Airri",
     author: "microBlock",
     category: "Communication",
-    version: "1.0.0",
+    version: "1.0.1",
     icon: "/static/icon.png", // Category icon
     color: "#2ecc71", // Category color (recommend some blocks color)
     blocks: [ // Blocks in Category
@@ -20,9 +20,9 @@
                             <field name="TEXT">--WiFi-Password--</field>
                         </shadow>
                     </value>
-                    <value name="token">
+                    <value name="email">
                         <shadow type="text">
-                            <field name="TEXT">--Token--</field>
+                            <field name="TEXT">--Your-Email--</field>
                         </shadow>
                     </value>
                 </block>

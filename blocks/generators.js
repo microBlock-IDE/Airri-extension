@@ -3,9 +3,9 @@ Blockly.Python['airri_setup'] = function(block) {
 
   var value_wifi_name = Blockly.Python.valueToCode(block, 'wifi_name', Blockly.Python.ORDER_ATOMIC);
   var value_wifi_password = Blockly.Python.valueToCode(block, 'wifi_password', Blockly.Python.ORDER_ATOMIC);
-  var value_token = Blockly.Python.valueToCode(block, 'token', Blockly.Python.ORDER_ATOMIC);
+  var value_email = Blockly.Python.valueToCode(block, 'email', Blockly.Python.ORDER_ATOMIC);
 
-  var code = `Airri.begin(${value_wifi_name}, ${value_wifi_password}, ${value_token})\n`;
+  var code = `Airri.begin(${value_wifi_name}, ${value_wifi_password}, ${value_email})\n`;
   return code;
 };
 

@@ -37,7 +37,7 @@ Blockly.defineBlocksWithJsonArray(
   },
   {
     "type": "airri_setup",
-    "message0": "Airri begin with  %1 WiFi Name: %2 WiFi Password: %3 Airri Token: %4",
+    "message0": "Airri begin with  %1 WiFi Name: %2 WiFi Password: %3 Email: %4",
     "args0": [
       {
         "type": "input_dummy"
@@ -56,7 +56,7 @@ Blockly.defineBlocksWithJsonArray(
       },
       {
         "type": "input_value",
-        "name": "token",
+        "name": "email",
         "check": "String",
         "align": "RIGHT"
       }

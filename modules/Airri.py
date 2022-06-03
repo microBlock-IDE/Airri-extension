@@ -3,18 +3,22 @@ import network
 import usocket
 import ujson
 import ussl
+import ubinascii
 
 HOST = "airri.microblock.app"
-PORT = 443
+PORT = const(443)
 
-_token = ""
+_owner_email = ""
 _field = { }
+_mac_address = ""
 
-def begin(ssid, passw, token):
-    global _token
-    _token = token
+def begin(ssid, passw, owner_email):
+    global _owner_email
+    global _mac_address
+    _owner_email = owner_email
 
     wlan = network.WLAN(network.STA_IF)
+    _mac_address = ubinascii.hexlify(wlan.config('mac'),':').decode().upper()
     wlan.active(True)
     wlan.connect(ssid, passw)
     while not wlan.isconnected():
@@ -24,7 +28,7 @@ def begin(ssid, passw, token):
 
 def setStationName(name):
     global _field
-    _field["station"] = name
+    _field["name"] = name.encode('utf8')
 
 def setLocation(lat, lng):
     global _field
@@ -32,11 +36,15 @@ def setLocation(lat, lng):
 
 def setField(name, value):
     global _field
-    _field[name] = float(value)
+    if not "data" in _field:
+        _field["data"] = { };
+    _field["data"][name] = float(value)
 
 def push():
     global _field
-    payload = ujson.dumps(_field)
+    _field["email"] = _owner_email
+    payload = str.encode(ujson.dumps(_field))
+    print("Payload: ", payload)
 
     s = usocket.socket()
     ai = usocket.getaddrinfo(HOST, PORT)
@@ -44,14 +52,14 @@ def push():
         s.connect(ai[0][-1])
         if PORT == 443:
             s = ussl.wrap_socket(s, server_hostname=HOST)
-        s.write(b"POST /data HTTP/1.1\r\n")
-        s.write(b"Host: {}:{}\r\n".format(HOST, PORT))
-        s.write(b"Authorization: {}\r\n".format(_token))
-        s.write(b"Content-Type: application/json\r\n")
-        s.write(b"Content-Length: {}\r\n".format(len(payload)))
-        s.write(b"Connection: close\r\n")
-        s.write(b"\r\n")
-        s.write(str.encode(payload))
+        dataReq =  (b"POST /api/devices/{}/data HTTP/1.1\r\n"
+                    b"Host: {}:{}\r\n"
+                    b"Content-Type: application/json\r\n"
+                    b"Content-Length: {}\r\n"
+                    b"Connection: close\r\n"
+                    b"\r\n").format(_mac_address, HOST, PORT, len(payload))
+        dataReq = dataReq + payload
+        s.write(dataReq)
         print("Res: {}".format(s.read()))
         s.close()
     except OSError:
@@ -59,4 +67,3 @@ def push():
 
     _field = { }
     return None
-
