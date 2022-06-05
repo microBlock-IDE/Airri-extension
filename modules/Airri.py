@@ -35,7 +35,7 @@ def connectWiFi():
 def begin(ssid, passw, owner_email):
     global _ssid, _passw, _owner_email, _wdt
     _ssid = ssid
-    _passw = passw if len(passw > 4) else None
+    _passw = passw if len(passw) > 4 else None
     _owner_email = owner_email
     _wdt = WDT(timeout=WDT_TIMEOUT)
     connectWiFi()
