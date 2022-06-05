@@ -4,27 +4,41 @@ import usocket
 import ujson
 import ussl
 import ubinascii
+from machine import WDT
 
 HOST = "airri.microblock.app"
 PORT = const(443)
 
+WDT_TIMEOUT = 60 * 1000 # 60 s = 1 min
+
 _owner_email = ""
 _field = { }
-_mac_address = ""
+_ssid = ""
+_passw = None
+_wdt = None
 
-def begin(ssid, passw, owner_email):
-    global _owner_email
-    global _mac_address
-    _owner_email = owner_email
+wlan = network.WLAN(network.STA_IF)
+mac_address = ubinascii.hexlify(wlan.config('mac'),':').decode().upper()
 
-    wlan = network.WLAN(network.STA_IF)
-    _mac_address = ubinascii.hexlify(wlan.config('mac'),':').decode().upper()
+def connectWiFi():
+    print("WiFi reconnect...")
     wlan.active(True)
-    wlan.connect(ssid, passw)
+    wlan.connect(_ssid, _passw)
+    if _wdt:
+        _wdt.feed()
     while not wlan.isconnected():
-        print("WiFi Connecting")
         sleep(0.1)
     print("WiFi Connected")
+    if _wdt:
+        _wdt.feed()
+
+def begin(ssid, passw, owner_email):
+    global _ssid, _passw, _owner_email, _wdt
+    _ssid = ssid
+    _passw = passw if len(passw > 4) else None
+    _owner_email = owner_email
+    _wdt = WDT(timeout=WDT_TIMEOUT)
+    connectWiFi()
 
 def setStationName(name):
     global _field
@@ -37,11 +51,16 @@ def setLocation(lat, lng):
 def setField(name, value):
     global _field
     if not "data" in _field:
-        _field["data"] = { };
+        _field["data"] = { }
     _field["data"][name] = float(value)
 
 def push():
     global _field
+    if _wdt:
+        _wdt.feed()
+    if not wlan.isconnected():
+        print("Error ! WiFi not connect")
+        connectWiFi()
     _field["email"] = _owner_email
     payload = str.encode(ujson.dumps(_field))
     print("Payload: ", payload)
@@ -57,13 +76,16 @@ def push():
                     b"Content-Type: application/json\r\n"
                     b"Content-Length: {}\r\n"
                     b"Connection: close\r\n"
-                    b"\r\n").format(_mac_address, HOST, PORT, len(payload))
+                    b"\r\n").format(mac_address, HOST, PORT, len(payload))
         dataReq = dataReq + payload
         s.write(dataReq)
         print("Res: {}".format(s.read()))
         s.close()
     except OSError:
+        print("Send data error !")
         s.close()
 
     _field = { }
+    if _wdt:
+        _wdt.feed()
     return None
