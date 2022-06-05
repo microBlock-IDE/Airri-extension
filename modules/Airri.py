@@ -64,14 +64,17 @@ def push():
         connectWiFi()
     _field["email"] = _owner_email
     payload = str.encode(ujson.dumps(_field))
-    print("Payload: ", payload)
+    # print("Payload: ", payload)
 
     s = usocket.socket()
     ai = usocket.getaddrinfo(HOST, PORT)
     try:
+        print("Connect to " + HOST, end='')
         s.connect(ai[0][-1])
+
         if PORT == 443:
             s = ussl.wrap_socket(s, server_hostname=HOST)
+        print("Connected")
         print("Send request:")
         dataReq =  (b"POST /api/devices/{}/data HTTP/1.1\r\n"
                     b"Host: {}:{}\r\n"
@@ -80,12 +83,15 @@ def push():
                     b"Connection: close\r\n"
                     b"\r\n").format(mac_address, HOST, PORT, len(payload))
         dataReq = dataReq + payload
-        print(str(dataReq, "UTF-8"))
+        for line in str(dataReq, "UTF-8").split("\r\n"):
+            print("> " + str(line, "UTF-8"))
         s.write(dataReq)
 
         print("Response:")
         dataRes = s.read()
-        print(str(dataRes, "UTF-8"))
+        for line in str(dataRes, "UTF-8").split("\r"):
+            print("> " + line.strip("\n"))
+        print("Disconnect")
         s.close()
     except OSError:
         print("Send data error !")
