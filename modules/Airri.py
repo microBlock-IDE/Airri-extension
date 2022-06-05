@@ -21,14 +21,15 @@ wlan = network.WLAN(network.STA_IF)
 mac_address = ubinascii.hexlify(wlan.config('mac'),':').decode().upper()
 
 def connectWiFi():
-    print("WiFi reconnect...")
+    print("WiFi reconnect", end='')
     wlan.active(True)
     wlan.connect(_ssid, _passw)
     if _wdt:
         _wdt.feed()
     while not wlan.isconnected():
         sleep(0.1)
-    print("WiFi Connected")
+        print(".", end='')
+    print("\r\nWiFi Connected")
     if _wdt:
         _wdt.feed()
 
@@ -71,6 +72,7 @@ def push():
         s.connect(ai[0][-1])
         if PORT == 443:
             s = ussl.wrap_socket(s, server_hostname=HOST)
+        print("Send request:")
         dataReq =  (b"POST /api/devices/{}/data HTTP/1.1\r\n"
                     b"Host: {}:{}\r\n"
                     b"Content-Type: application/json\r\n"
@@ -78,8 +80,12 @@ def push():
                     b"Connection: close\r\n"
                     b"\r\n").format(mac_address, HOST, PORT, len(payload))
         dataReq = dataReq + payload
+        print(str(dataReq, "UTF-8"))
         s.write(dataReq)
-        print("Res: {}".format(s.read()))
+
+        print("Response:")
+        dataRes = s.read()
+        print(str(dataRes, "UTF-8"))
         s.close()
     except OSError:
         print("Send data error !")
