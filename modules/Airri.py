@@ -21,7 +21,7 @@ wlan = network.WLAN(network.STA_IF)
 mac_address = ubinascii.hexlify(wlan.config('mac'),':').decode().upper()
 
 def connectWiFi():
-    print("WiFi reconnect", end='')
+    print("WiFi Connecting", end='')
     wlan.active(True)
     wlan.connect(_ssid, _passw)
     if _wdt:
@@ -29,7 +29,7 @@ def connectWiFi():
     while not wlan.isconnected():
         sleep(0.1)
         print(".", end='')
-    print("\r\nWiFi Connected")
+    print("Connected")
     if _wdt:
         _wdt.feed()
 
@@ -69,12 +69,12 @@ def push():
     s = usocket.socket()
     ai = usocket.getaddrinfo(HOST, PORT)
     try:
-        print("Connect to " + HOST, end='')
+        print("Connecting to " + HOST + "...", end='')
         s.connect(ai[0][-1])
 
         if PORT == 443:
             s = ussl.wrap_socket(s, server_hostname=HOST)
-        print("Connected")
+        print(" Connected")
         print("Send request:")
         dataReq =  (b"POST /api/devices/{}/data HTTP/1.1\r\n"
                     b"Host: {}:{}\r\n"
