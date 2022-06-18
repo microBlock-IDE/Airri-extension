@@ -47,7 +47,7 @@ def setStationName(name):
 
 def setLocation(lat, lng):
     global _field
-    _field["location"] = "{.8f}, {.8f}".format(lat, lng)
+    _field["location"] = "{:.8f}, {:.8f}".format(lat, lng)
 
 def setField(name, value):
     global _field
