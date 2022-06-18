@@ -3,7 +3,7 @@
     description: "Send air quality value to Airri",
     author: "microBlock",
     category: "Communication",
-    version: "1.0.1",
+    version: "1.0.2",
     icon: "/static/icon.png", // Category icon
     color: "#2ecc71", // Category color (recommend some blocks color)
     blocks: [ // Blocks in Category

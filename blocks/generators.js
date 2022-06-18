@@ -24,7 +24,7 @@ Blockly.Python['airri_set_station_location'] = function(block) {
   var value_lat = Blockly.Python.valueToCode(block, 'lat', Blockly.Python.ORDER_ATOMIC);
   var value_lng = Blockly.Python.valueToCode(block, 'lng', Blockly.Python.ORDER_ATOMIC);
 
-  var code = `Airri.setLocation(${value_lat}, ${value_lng}\n`;
+  var code = `Airri.setLocation(${value_lat}, ${value_lng})\n`;
   return code;
 };
 
